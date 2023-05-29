@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Capture handle</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="module">
+		// Page which should be shared needs to have this fragment, "handle" is a name to be shared
+    const config = {
+      handle: "myPage",
+      permittedOrigins: ['*'],
+    };
+    navigator.mediaDevices.setCaptureHandleConfig(config);
+
+
+    const showShareModal = document.querySelector("#showShareModal");
+
+    showShareModal.addEventListener("click", async () => {
+      const stream = await window.navigator.mediaDevices.getDisplayMedia({
+				preferCurrentTab: true,
+			});
+      const captureHandle = stream.getVideoTracks()[0].getCaptureHandle();
+      // Here you check the name exposed by shared page
+      if (captureHandle?.handle === "myPage") {
+        debugger
+        alert("Right page, process stream further");
+			}
+      else {
+        alert("Wrong page, stop stream");
+			}
+      stream.getVideoTracks()[0].stop();
+    });
+	</script>
+</head>
+<body style="padding: 48px">
+<main>
+	<h1>Capture handle - detect if you chose correct page to share</h1>
+	<p>
+		<a href="https://developer.chrome.com/docs/web-platform/capture-handle/" target="_blank">
+			Read more about Capture Handle
+		</a>
+	</p>
+	<p>
+		<a href="https://github.com/radek-anuszewski/capture-handle-short" target="_blank">
+			Check source code
+		</a>
+	</p>
+	<article>
+		<button id="showShareModal">Show share modal</button>
+	</article>
+</main>
+</body>
+</html>
